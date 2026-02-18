@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: hotel_booking_db
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hotel_booking
+      TZ: UTC
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+    - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:    
