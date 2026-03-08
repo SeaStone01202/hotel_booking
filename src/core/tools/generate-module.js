@@ -8,26 +8,24 @@ if (!name) {
 }
 
 const Name = capitalize(name);
-const NAME = name.toUpperCase();
-const base = path.join('src', 'core', name);
+const base = path.join('src', 'modules', name);
 
 // ===== FOLDERS =====
 [
   base,
   `${base}/domain`,
   `${base}/dto`,
-  `${base}/infrastructure/entities`,
-  `${base}/infrastructure/repositories`,
-  `${base}/infrastructure/providers`,
-  `${base}/mappers`,
+  `${base}/infrastructure/persistance/relational/entities`,
+  `${base}/infrastructure/persistance/relational/repositories`,
+  `${base}/infrastructure/persistance/relational/providers`,
+  `${base}/infrastructure/persistance/relational/mappers`,
+  `${base}/infrastructure/persistance/relational/enums`,
 ].forEach((dir) => fs.mkdirSync(dir, { recursive: true }));
 
 // ===== FILES =====
 const files = {
-
   // DOMAIN
-  [`${base}/domain/${name}.domain.ts`]:
-`export class ${Name} {
+  [`${base}/domain/${name}.domain.ts`]: `export class ${Name} {
   id?: string;
 
   createdAt?: Date;
@@ -43,8 +41,7 @@ const files = {
 `,
 
   // DTO - CREATE
-  [`${base}/dto/create-${name}.dto.ts`]:
-`import { IsNotEmpty, IsString } from 'class-validator';
+  [`${base}/dto/create-${name}.dto.ts`]: `import { IsNotEmpty, IsString } from 'class-validator';
 
 export class Create${Name}Dto {
   @IsNotEmpty()
@@ -54,8 +51,7 @@ export class Create${Name}Dto {
 `,
 
   // DTO - UPDATE
-  [`${base}/dto/update-${name}.dto.ts`]:
-`import { IsOptional, IsString } from 'class-validator';
+  [`${base}/dto/update-${name}.dto.ts`]: `import { IsOptional, IsString } from 'class-validator';
 
 export class Update${Name}Dto {
   @IsOptional()
@@ -65,8 +61,7 @@ export class Update${Name}Dto {
 `,
 
   // DTO - FILTER
-  [`${base}/dto/filter-${name}.dto.ts`]:
-`import { IsOptional, IsString } from 'class-validator';
+  [`${base}/dto/filter-${name}.dto.ts`]: `import { IsOptional, IsString } from 'class-validator';
  import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 export class Filter${Name}Dto extends PaginationDto {
@@ -77,8 +72,7 @@ export class Filter${Name}Dto extends PaginationDto {
 `,
 
   // ENTITY
-  [`${base}/infrastructure/entities/${name}.entity.ts`]:
-`import {
+  [`${base}/infrastructure/persistance/relational/entities/${name}.entity.ts`]: `import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -112,8 +106,7 @@ export class ${Name}Entity extends BaseEntity {
 `,
 
   // REPOSITORY INTERFACE
-  [`${base}/infrastructure/repositories/${name}.repository.ts`]:
-`import { ${Name}Entity } from '../entities/${name}.entity';
+  [`${base}/infrastructure/persistance/${name}.repository.interface.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
  import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
 
 export abstract class ${Name}Repository {
@@ -127,8 +120,7 @@ export abstract class ${Name}Repository {
 `,
 
   // REPOSITORY IMPLEMENTATION
-  [`${base}/infrastructure/repositories/${name}.repository.impl.ts`]:
-`import { Injectable } from '@nestjs/common';
+  [`${base}/infrastructure/persistance/relational/repositories/${name}.repository.ts`]: `import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { ${Name}Entity } from '../entities/${name}.entity';
@@ -203,8 +195,7 @@ export class ${Name}RepositoryImpl extends ${Name}Repository {
 `,
 
   // MAPPER
-  [`${base}/mappers/${name}.mapper.ts`]:
-`import { ${Name}Entity } from '../infrastructure/entities/${name}.entity';
+  [`${base}/infrastructure/persistance/relational/mappers/${name}.mapper.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
 import { ${Name} } from '../domain/${name}.domain';
 
 export class ${Name}Mapper {
@@ -228,8 +219,7 @@ export class ${Name}Mapper {
 `,
 
   // PROVIDERS
-  [`${base}/infrastructure/providers/${name}.providers.ts`]:
-`import { ${Name}Repository } from '../repositories/${name}.repository';
+  [`${base}/infrastructure/persistance/relational/providers/${name}.providers.ts`]: `import { ${Name}Repository } from '../repositories/${name}.repository';
 import { ${Name}RepositoryImpl } from '../repositories/${name}.repository.impl';
 
 export const ${Name}Providers = [
@@ -241,8 +231,7 @@ export const ${Name}Providers = [
 `,
 
   // SERVICE
-  [`${base}/${name}.service.ts`]:
-`import { Injectable, NotFoundException } from '@nestjs/common';
+  [`${base}/${name}.service.ts`]: `import { Injectable, NotFoundException } from '@nestjs/common';
 import type { ${Name}Repository } from './infrastructure/repositories/${name}.repository';
 import { Create${Name}Dto } from './dto/create-${name}.dto';
 import { Update${Name}Dto } from './dto/update-${name}.dto';
@@ -307,8 +296,7 @@ export class ${Name}Service {
 `,
 
   // CONTROLLER
-  [`${base}/${name}.controller.ts`]:
-`import {
+  [`${base}/${name}.controller.ts`]: `import {
   Controller,
   Get,
   Post,
@@ -376,8 +364,7 @@ export class ${Name}Controller {
 `,
 
   // MODULE
-  [`${base}/${name}.module.ts`]:
-`import { Module } from '@nestjs/common';
+  [`${base}/${name}.module.ts`]: `import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ${Name}Controller } from './${name}.controller';
 import { ${Name}Service } from './${name}.service';
