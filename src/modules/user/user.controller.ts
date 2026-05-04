@@ -1,22 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
-  Patch,
+  Controller,
   Delete,
-  Query,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { UserService } from './user.service';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {

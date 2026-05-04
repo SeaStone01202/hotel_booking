@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { BranchRepository } from './infrastructure/repositories/branch.repository';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
 import { FilterBranchDto } from './dto/filter-branch.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { BranchEntity } from './infrastructure/entities/branch.entity';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
+import { BranchRepository } from './infrastructure/persistance/branch.repository.interface';
+import { BranchEntity } from './infrastructure/persistance/relational/entities/branch.entity';
 
 @Injectable()
 export class BranchService {

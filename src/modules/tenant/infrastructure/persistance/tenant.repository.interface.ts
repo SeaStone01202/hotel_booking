@@ -1,5 +1,5 @@
-import { TenantEntity } from '../entities/tenant.entity';
- import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { TenantEntity } from './relational/entities/tenant.entity';
 
 export abstract class TenantRepository {
   abstract create(data: Partial<TenantEntity>): Promise<TenantEntity>;

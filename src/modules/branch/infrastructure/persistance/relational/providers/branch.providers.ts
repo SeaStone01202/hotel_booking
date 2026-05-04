@@ -1,5 +1,5 @@
-import { BranchRepository } from '../repositories/branch.repository';
-import { BranchRepositoryImpl } from '../repositories/branch.repository.impl';
+import { BranchRepository } from "../../branch.repository.interface";
+import { BranchRepositoryImpl } from "../repositories/branch.repository";
 
 export const BranchProviders = [
   {

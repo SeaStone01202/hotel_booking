@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthenticationRepository } from './infrastructure/repositories/authentication.repository';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
-import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { FilterAuthenticationDto } from './dto/filter-authentication.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { AuthenticationEntity } from './infrastructure/entities/authentication.entity';
+import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
+import { AuthenticationRepository } from './infrastructure/persistance/authentication.repository.interface';
+import { AuthenticationEntity } from './infrastructure/persistance/relational/entities/authentication.entity';
 
 @Injectable()
 export class AuthenticationService {

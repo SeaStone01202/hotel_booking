@@ -17,7 +17,7 @@ import { UserRole } from '../enums/user-role.enum';
 @Entity('user')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', length: 150, nullable: false })
   fullName!: string;
@@ -53,10 +53,10 @@ export class UserEntity extends BaseEntity {
   tenantMemberships?: Relation<TenantMemberEntity[]>;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;

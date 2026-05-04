@@ -1,5 +1,5 @@
-import { UserRepository } from '../repositories/user.repository';
-import { UserRepositoryImpl } from '../repositories/user.repository.impl';
+import { UserRepository } from "../../user.repository.interface";
+import { UserRepositoryImpl } from "../repositories/user.repository";
 
 export const UserProviders = [
   {

@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { UserRepository } from './infrastructure/repositories/user.repository';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { UserEntity } from './infrastructure/entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './infrastructure/persistance/relational/entities/user.entity';
+import { UserRepository } from './infrastructure/persistance/user.repository.interface';
 
 @Injectable()
 export class UserService {

@@ -20,7 +20,7 @@ import { TenantMemberEntity } from './tenant-member.entity';
 @Entity('tenant')
 export class TenantEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', unique: true, nullable: false })
   name!: string;
@@ -55,7 +55,7 @@ export class TenantEntity extends BaseEntity {
   status!: TenantStatus;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;

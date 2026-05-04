@@ -15,11 +15,11 @@ const base = path.join('src', 'modules', name);
   base,
   `${base}/domain`,
   `${base}/dto`,
-  `${base}/infrastructure/persistance/relational/entities`,
-  `${base}/infrastructure/persistance/relational/repositories`,
-  `${base}/infrastructure/persistance/relational/providers`,
-  `${base}/infrastructure/persistance/relational/mappers`,
-  `${base}/infrastructure/persistance/relational/enums`,
+  `${base}/infrastructure/persistence/relational/entities`,
+  `${base}/infrastructure/persistence/relational/repositories`,
+  `${base}/infrastructure/persistence/relational/providers`,
+  `${base}/infrastructure/persistence/relational/mappers`,
+  `${base}/infrastructure/persistence/relational/enums`,
 ].forEach((dir) => fs.mkdirSync(dir, { recursive: true }));
 
 // ===== FILES =====
@@ -72,7 +72,7 @@ export class Filter${Name}Dto extends PaginationDto {
 `,
 
   // ENTITY
-  [`${base}/infrastructure/persistance/relational/entities/${name}.entity.ts`]: `import {
+  [`${base}/infrastructure/persistence/relational/entities/${name}.entity.ts`]: `import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -106,7 +106,7 @@ export class ${Name}Entity extends BaseEntity {
 `,
 
   // REPOSITORY INTERFACE
-  [`${base}/infrastructure/persistance/${name}.repository.interface.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
+  [`${base}/infrastructure/persistence/${name}.repository.interface.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
  import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
 
 export abstract class ${Name}Repository {
@@ -120,7 +120,7 @@ export abstract class ${Name}Repository {
 `,
 
   // REPOSITORY IMPLEMENTATION
-  [`${base}/infrastructure/persistance/relational/repositories/${name}.repository.ts`]: `import { Injectable } from '@nestjs/common';
+  [`${base}/infrastructure/persistence/relational/repositories/${name}.repository.ts`]: `import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { ${Name}Entity } from '../entities/${name}.entity';
@@ -195,7 +195,7 @@ export class ${Name}RepositoryImpl extends ${Name}Repository {
 `,
 
   // MAPPER
-  [`${base}/infrastructure/persistance/relational/mappers/${name}.mapper.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
+  [`${base}/infrastructure/persistence/relational/mappers/${name}.mapper.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
 import { ${Name} } from '../domain/${name}.domain';
 
 export class ${Name}Mapper {
@@ -219,7 +219,7 @@ export class ${Name}Mapper {
 `,
 
   // PROVIDERS
-  [`${base}/infrastructure/persistance/relational/providers/${name}.providers.ts`]: `import { ${Name}Repository } from '../repositories/${name}.repository';
+  [`${base}/infrastructure/persistence/relational/providers/${name}.providers.ts`]: `import { ${Name}Repository } from '../repositories/${name}.repository';
 import { ${Name}RepositoryImpl } from '../repositories/${name}.repository.impl';
 
 export const ${Name}Providers = [

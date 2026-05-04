@@ -1,5 +1,5 @@
-import { BranchEntity } from '../entities/branch.entity';
- import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { PaginatedResult } from "src/core/common/dto/paginated-result.dto";
+import { BranchEntity } from "./relational/entities/branch.entity";
 
 export abstract class BranchRepository {
   abstract create(data: Partial<BranchEntity>): Promise<BranchEntity>;

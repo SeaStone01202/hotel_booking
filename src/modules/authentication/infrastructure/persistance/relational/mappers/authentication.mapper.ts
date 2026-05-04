@@ -1,5 +1,5 @@
+import { Authentication } from 'src/modules/authentication/domain/authentication.domain';
 import { AuthenticationEntity } from '../entities/authentication.entity';
-import { Authentication } from '../domain/authentication.domain';
 
 export class AuthenticationMapper {
   static toDomain(entity: AuthenticationEntity): Authentication {

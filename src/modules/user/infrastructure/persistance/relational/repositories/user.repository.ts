@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { UserRepository } from './user.repository';
-import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { UserRepository } from '../../user.repository.interface';
 
 @Injectable()
 export class UserRepositoryImpl extends UserRepository {

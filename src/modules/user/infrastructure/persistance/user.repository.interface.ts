@@ -1,5 +1,5 @@
-import { UserEntity } from '../entities/user.entity';
- import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { PaginatedResult } from "src/core/common/dto/paginated-result.dto";
+import { UserEntity } from "./relational/entities/user.entity";
 
 export abstract class UserRepository {
   abstract create(data: Partial<UserEntity>): Promise<UserEntity>;

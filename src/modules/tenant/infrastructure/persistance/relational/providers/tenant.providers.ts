@@ -1,5 +1,5 @@
-import { TenantRepository } from '../repositories/tenant.repository';
-import { TenantRepositoryImpl } from '../repositories/tenant.repository.impl';
+import { TenantRepository } from "../../tenant.repository.interface";
+import { TenantRepositoryImpl } from "../repositories/tenant.repository";
 
 export const TenantProviders = [
   {

@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
- import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
 export class FilterBranchDto extends PaginationDto {
   @IsOptional()

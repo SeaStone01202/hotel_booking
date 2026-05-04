@@ -16,7 +16,7 @@ import { BranchService } from './branch.service';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
 import { FilterBranchDto } from './dto/filter-branch.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
 @Controller('branch')
 export class BranchController {

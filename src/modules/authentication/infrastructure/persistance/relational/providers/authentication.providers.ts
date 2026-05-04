@@ -1,5 +1,6 @@
-import { AuthenticationRepository } from '../repositories/authentication.repository';
-import { AuthenticationRepositoryImpl } from '../repositories/authentication.repository.impl';
+import { AuthenticationRepository } from "../../authentication.repository.interface";
+import { AuthenticationRepositoryImpl } from "../repositories/authentication.repository";
+
 
 export const AuthenticationProviders = [
   {

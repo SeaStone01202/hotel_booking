@@ -16,7 +16,7 @@ import { TenantEntity } from 'src/modules/tenant/infrastructure/persistance/rela
 @Entity('branch')
 export class BranchEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Index('idx_branch_tenant_id')
   @Column({ type: 'uuid', name: 'tenant_id', nullable: false })
@@ -45,10 +45,10 @@ export class BranchEntity extends BaseEntity {
   isActive!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;

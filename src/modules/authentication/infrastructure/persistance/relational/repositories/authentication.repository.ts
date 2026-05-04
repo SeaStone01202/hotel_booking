@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike } from 'typeorm';
+import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { ILike, Repository } from 'typeorm';
+import { AuthenticationRepository } from '../../authentication.repository.interface';
 import { AuthenticationEntity } from '../entities/authentication.entity';
-import { AuthenticationRepository } from './authentication.repository';
-import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
 
 @Injectable()
 export class AuthenticationRepositoryImpl extends AuthenticationRepository {

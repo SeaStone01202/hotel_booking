@@ -1,5 +1,5 @@
+import { Branch } from 'src/modules/branch/domain/branch.domain';
 import { BranchEntity } from '../entities/branch.entity';
-import { Branch } from '../domain/branch.domain';
 
 export class BranchMapper {
   static toDomain(entity: BranchEntity): Branch {

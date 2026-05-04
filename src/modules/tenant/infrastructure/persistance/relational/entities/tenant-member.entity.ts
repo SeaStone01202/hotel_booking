@@ -19,7 +19,7 @@ import { TenantEntity } from './tenant.entity';
 @Unique('uq_tenant_member_tenant_email', ['tenantId', 'email'])
 export class TenantMemberEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Index('idx_tenant_member_tenant_id')
   @Column({ type: 'uuid', name: 'tenant_id', nullable: false })
@@ -56,7 +56,7 @@ export class TenantMemberEntity extends BaseEntity {
   isPrimary!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;

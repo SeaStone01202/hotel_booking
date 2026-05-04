@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { TenantRepository } from './infrastructure/repositories/tenant.repository';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { FilterTenantDto } from './dto/filter-tenant.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { TenantEntity } from './infrastructure/entities/tenant.entity';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
+import { TenantEntity } from './infrastructure/persistance/relational/entities/tenant.entity';
+import { TenantRepository } from './infrastructure/persistance/tenant.repository.interface';
+
 
 @Injectable()
 export class TenantService {

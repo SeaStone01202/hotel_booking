@@ -1,5 +1,5 @@
-import { AuthenticationEntity } from '../entities/authentication.entity';
- import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { PaginatedResult } from "src/core/common/dto/paginated-result.dto";
+import { AuthenticationEntity } from "./relational/entities/authentication.entity";
 
 export abstract class AuthenticationRepository {
   abstract create(data: Partial<AuthenticationEntity>): Promise<AuthenticationEntity>;

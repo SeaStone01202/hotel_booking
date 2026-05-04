@@ -16,7 +16,7 @@ import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { FilterAuthenticationDto } from './dto/filter-authentication.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
 @Controller('authentication')
 export class AuthenticationController {
