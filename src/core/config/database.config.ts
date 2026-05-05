@@ -8,7 +8,7 @@ export const databaseConfig = (): TypeOrmModuleOptions => ({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_DATABASE || 'hotel_booking',
   entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/database/migrations/**/*.js'],
+  migrations: ['dist/core/database/migrations/**/*.js'],
   migrationsTableName: 'migrations',
   synchronize: false,
   logging: false,

@@ -19,25 +19,30 @@ export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 150, nullable: false })
+  @Column({ name: 'full_name', type: 'varchar', length: 150, nullable: false })
   fullName!: string;
 
   @Index('idx_user_email')
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })
   email!: string;
 
-  @Column({ type: 'varchar', length: 25, nullable: true })
+  @Column({ name: 'phone', type: 'varchar', length: 25, nullable: true })
   phone?: string;
 
-  @Column({ type: 'varchar', name: 'password_hash', nullable: false })
+  @Column({ name: 'password_hash', type: 'varchar', nullable: false })
   passwordHash!: string;
 
-  @Column({ type: 'smallint', default: UserRole.STAFF, nullable: false })
+  @Column({
+    name: 'role',
+    type: 'smallint',
+    default: UserRole.STAFF,
+    nullable: false,
+  })
   role!: UserRole;
 
   @Column({
-    type: 'boolean',
     name: 'is_active',
+    type: 'boolean',
     default: true,
     nullable: false,
   })
@@ -52,13 +57,13 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => TenantMemberEntity, (tenantMember) => tenantMember.user)
   tenantMemberships?: Relation<TenantMemberEntity[]>;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 
   constructor(data?: Partial<UserEntity>) {

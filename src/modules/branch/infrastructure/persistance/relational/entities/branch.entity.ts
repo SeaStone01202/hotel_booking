@@ -19,7 +19,7 @@ export class BranchEntity extends BaseEntity {
   id!: string;
 
   @Index('idx_branch_tenant_id')
-  @Column({ type: 'uuid', name: 'tenant_id', nullable: false })
+  @Column({ name: 'tenant_id', type: 'uuid', nullable: false })
   tenantId!: string;
 
   @ManyToOne(() => TenantEntity, (tenant) => tenant.branches, {
@@ -29,28 +29,33 @@ export class BranchEntity extends BaseEntity {
   @JoinColumn({ name: 'tenant_id' })
   tenant!: Relation<TenantEntity>;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ name: 'name', type: 'varchar', nullable: false })
   name!: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ name: 'phone', type: 'varchar', nullable: true })
   phone?: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ name: 'email', type: 'varchar', nullable: true })
   email?: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ name: 'address', type: 'varchar', nullable: false })
   address!: string;
 
-  @Column({ type: 'boolean', name: 'is_active', nullable: false, default: true })
+  @Column({
+    name: 'is_active',
+    type: 'boolean',
+    nullable: false,
+    default: true,
+  })
   isActive!: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 
   constructor(data?: Partial<BranchEntity>) {

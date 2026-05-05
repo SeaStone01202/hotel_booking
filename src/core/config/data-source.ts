@@ -10,7 +10,7 @@ const AppDataSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: ['src/**/*.entity.ts'],
-  migrations: ['src/database/migrations/**/*.ts'],
+  migrations: ['src/core/database/migrations/**/*.ts'],
   migrationsTableName: 'migrations',
 });
 export default AppDataSource;

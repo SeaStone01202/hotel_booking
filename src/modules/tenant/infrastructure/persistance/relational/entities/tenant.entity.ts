@@ -22,15 +22,15 @@ export class TenantEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', unique: true, nullable: false })
+  @Column({ name: 'name', type: 'varchar', unique: true, nullable: false })
   name!: string;
 
   @Index('idx_tenant_subdomain', { unique: true })
-  @Column({ type: 'varchar', unique: true, nullable: false })
+  @Column({ name: 'subdomain', type: 'varchar', unique: true, nullable: false })
   subdomain!: string;
 
   @Index('idx_tenant_owner_id')
-  @Column({ type: 'uuid', name: 'owner_id', nullable: false })
+  @Column({ name: 'owner_id', type: 'uuid', nullable: false })
   ownerId!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.ownedTenants, {
@@ -47,6 +47,7 @@ export class TenantEntity extends BaseEntity {
   members?: Relation<TenantMemberEntity[]>;
 
   @Column({
+    name: 'status',
     type: 'enum',
     enum: TenantStatus,
     default: TenantStatus.PENDING,
@@ -54,13 +55,13 @@ export class TenantEntity extends BaseEntity {
   })
   status!: TenantStatus;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ nullable: true })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 
   constructor(data?: Partial<TenantEntity>) {

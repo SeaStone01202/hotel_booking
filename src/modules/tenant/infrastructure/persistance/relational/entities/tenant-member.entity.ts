@@ -22,7 +22,7 @@ export class TenantMemberEntity extends BaseEntity {
   id!: string;
 
   @Index('idx_tenant_member_tenant_id')
-  @Column({ type: 'uuid', name: 'tenant_id', nullable: false })
+  @Column({ name: 'tenant_id', type: 'uuid', nullable: false })
   tenantId!: string;
 
   @ManyToOne(() => TenantEntity, (tenant) => tenant.members, {
@@ -33,7 +33,7 @@ export class TenantMemberEntity extends BaseEntity {
   tenant!: Relation<TenantEntity>;
 
   @Index('idx_tenant_member_user_id')
-  @Column({ type: 'uuid', name: 'user_id', nullable: false })
+  @Column({ name: 'user_id', type: 'uuid', nullable: false })
   userId!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.tenantMemberships, {
@@ -44,24 +44,24 @@ export class TenantMemberEntity extends BaseEntity {
   user!: Relation<UserEntity>;
 
   @Index('idx_tenant_member_email')
-  @Column({ type: 'varchar', name: 'email', nullable: false })
+  @Column({ name: 'email', type: 'varchar', nullable: false })
   email!: string;
 
   @Column({
-    type: 'boolean',
     name: 'is_primary',
+    type: 'boolean',
     nullable: false,
     default: false,
   })
   isPrimary!: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ nullable: true })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
   updatedAt?: Date;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 
   constructor(data?: Partial<TenantMemberEntity>) {
