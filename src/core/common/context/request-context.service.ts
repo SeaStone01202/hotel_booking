@@ -1,0 +1,13 @@
+import { Injectable } from '@nestjs/common';
+import { tenantContext } from './tenant-context';
+
+@Injectable()
+export class RequestContextService {
+  getTenantId() {
+    const store = tenantContext.getStore();
+    if (!store) {
+      throw new Error('Tenant not found');
+    }
+    return store.tenantId;
+  }
+}
