@@ -1,0 +1,73 @@
+import { UserEntity } from 'src/modules/user/infrastructure/persistance/relational/entities/user.entity';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+  UpdateDateColumn,
+  type Relation,
+} from 'typeorm';
+import { TenantEntity } from './tenant.entity';
+
+@Entity('tenant_member')
+@Unique('uq_tenant_member_tenant_email', ['tenantId', 'email'])
+export class TenantMemberEntity extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
+
+  @Index('idx_tenant_member_tenant_id')
+  @Column({ name: 'tenant_id', type: 'uuid', nullable: false })
+  tenantId!: string;
+
+  @ManyToOne(() => TenantEntity, (tenant) => tenant.members, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'tenant_id' })
+  tenant!: Relation<TenantEntity>;
+
+  @Index('idx_tenant_member_user_id')
+  @Column({ name: 'user_id', type: 'uuid', nullable: false })
+  userId!: string;
+
+  @ManyToOne(() => UserEntity, (user) => user.tenantMemberships, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: Relation<UserEntity>;
+
+  @Index('idx_tenant_member_email')
+  @Column({ name: 'email', type: 'varchar', nullable: false })
+  email!: string;
+
+  @Column({
+    name: 'is_primary',
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  isPrimary!: boolean;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
+  updatedAt?: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
+  deletedAt?: Date;
+
+  constructor(data?: Partial<TenantMemberEntity>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+}
