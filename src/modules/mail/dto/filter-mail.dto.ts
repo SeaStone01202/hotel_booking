@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
-export class FilterUserDto extends PaginationDto {
+export class FilterMailDto extends PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;

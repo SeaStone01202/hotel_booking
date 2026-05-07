@@ -13,10 +13,18 @@ services:
       TZ: UTC
 
     ports:
-      - "5432:5432"
+      - '5432:5432'
 
     volumes:
-    - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
+
+  redis:
+    image: redis:7
+    container_name: hotel_booking_redis
+    restart: always
+
+    ports:
+      - '6379:6379'
 
 volumes:
-  postgres_data:    
+  postgres_data:

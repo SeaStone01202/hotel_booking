@@ -6,18 +6,25 @@ import { BranchModule } from './modules/branch/branch.module';
 import { TenantModule } from './modules/tenant/tenant.module';
 import { UserModule } from './modules/user/user.module';
 import { TenantMiddleware } from './core/common/context/tenant.middleware';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, UserModule, TenantModule, BranchModule],
+      imports: [
+        ConfigModule,
+        UserModule,
+        AuthenticationModule,
+        TenantModule,
+        BranchModule,
+      ],
       useFactory: databaseConfig,
     }),
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantMiddleware).forRoutes('*');
+    consumer.apply(TenantMiddleware).forRoutes('api');
   }
 }

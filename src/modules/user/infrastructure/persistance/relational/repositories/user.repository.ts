@@ -69,4 +69,8 @@ export class UserRepositoryImpl extends UserRepository {
   async delete(id: string) {
     await this.repo.softDelete(id);
   }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.repo.findOne({ where: { email } });
+  }
 }

@@ -4,11 +4,12 @@ import { UserEntity } from './infrastructure/persistance/relational/entities/use
 import { UserProviders } from './infrastructure/persistance/relational/providers/user.providers';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { UserRepository } from './infrastructure/persistance/user.repository.interface';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   controllers: [UserController],
   providers: [UserService, ...UserProviders],
-  exports: [UserService],
+  exports: [UserService, UserRepository],
 })
 export class UserModule {}
