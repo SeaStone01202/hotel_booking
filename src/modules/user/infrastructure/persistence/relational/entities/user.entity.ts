@@ -1,5 +1,5 @@
-import { TenantMemberEntity } from 'src/modules/tenant/infrastructure/persistance/relational/entities/tenant-member.entity';
-import { TenantEntity } from 'src/modules/tenant/infrastructure/persistance/relational/entities/tenant.entity';
+import { TenantMemberEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant-member.entity';
+import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant.entity';
 import {
   BaseEntity,
   Column,

@@ -3,15 +3,12 @@ import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { FilterTenantDto } from './dto/filter-tenant.dto';
 import { PaginationDto } from 'src/core/common/dto/pagination.dto';
-import { TenantEntity } from './infrastructure/persistance/relational/entities/tenant.entity';
-import { TenantRepository } from './infrastructure/persistance/tenant.repository.interface';
-
+import { TenantEntity } from './infrastructure/persistence/relational/entities/tenant.entity';
+import { TenantRepository } from './infrastructure/persistence/tenant.repository.interface';
 
 @Injectable()
 export class TenantService {
-  constructor(
-    private readonly repo: TenantRepository,
-  ) {}
+  constructor(private readonly repo: TenantRepository) {}
 
   async create(data: CreateTenantDto) {
     return this.repo.create(data as Partial<TenantEntity>);
@@ -59,5 +56,15 @@ export class TenantService {
   async delete(id: string) {
     await this.findOne(id);
     return this.repo.delete(id);
+  }
+
+  async ensureTenantNameAvailable(tenantName: string) {
+    const existing = await this.repo.findByTenantNameActive(tenantName);
+    if (existing) {
+      throw new NotFoundException(
+        `Tenant with name ${tenantName} already exists`,
+      );
+    }
+    return existing;
   }
 }

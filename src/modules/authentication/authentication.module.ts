@@ -1,23 +1,22 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
-import { AuthenticationEntity } from './infrastructure/persistance/relational/entities/authentication.entity';
-import { AuthenticationProviders } from './infrastructure/persistance/relational/providers/authentication.providers';
-import { UserService } from '../user/user.service';
-import { UserRepository } from '../user/infrastructure/persistance/user.repository.interface';
 import { UserModule } from '../user/user.module';
-import { Mail } from '../mail/domain/mail.domain';
 import { MailModule } from '../mail/mail.module';
+import { TenantModule } from '../tenant/tenant.module';
+import { RedisProvider } from 'src/core/config/redis.config';
+import { VerifyRegisterOtpUseCase } from './use-cases/register/verify-register-otp.use-case';
+import { SendRegisterOtpUseCase } from './use-cases/register/send-register-otp.use-case';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([AuthenticationEntity]),
-    UserModule,
-    MailModule,
-  ],
+  imports: [UserModule, MailModule, TenantModule],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, ...AuthenticationProviders],
+  providers: [
+    RedisProvider,
+    AuthenticationService,
+    SendRegisterOtpUseCase,
+    VerifyRegisterOtpUseCase,
+  ],
   exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

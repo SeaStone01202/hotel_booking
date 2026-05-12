@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TenantStatus } from '../infrastructure/persistance/relational/enums/tenant-status.enum';
+import { TenantStatus } from '../infrastructure/persistence/relational/enums/tenant-status.enum';
 
 export class Tenant {
   id?: string;

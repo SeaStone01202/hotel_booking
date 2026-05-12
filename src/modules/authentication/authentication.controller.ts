@@ -1,22 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Patch,
-  Delete,
-  Query,
-  HttpCode,
-  HttpStatus,
-  ValidationPipe,
-} from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
-import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
-import { FilterAuthenticationDto } from './dto/filter-authentication.dto';
-import { PaginationDto } from 'src/core/common/dto/pagination.dto';
+import { VerifyRegisterOtpRequestDto } from './dto/verify-register-otp.request.dto';
 
 @Controller('auth')
 export class AuthenticationController {
@@ -24,6 +9,11 @@ export class AuthenticationController {
 
   @Post('register')
   async register(@Body(ValidationPipe) data: CreateAuthenticationDto) {
-    return this.service.register(data);
+    return this.service.sendOTPregister(data);
+  }
+
+  @Post('verify')
+  async verify(@Body() request: VerifyRegisterOtpRequestDto) {
+    return this.service.verifyOTPregister(request);
   }
 }

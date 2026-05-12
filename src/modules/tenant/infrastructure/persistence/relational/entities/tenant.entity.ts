@@ -1,5 +1,5 @@
 import { BranchEntity } from 'src/modules/branch/infrastructure/persistance/relational/entities/branch.entity';
-import { UserEntity } from 'src/modules/user/infrastructure/persistance/relational/entities/user.entity';
+import { UserEntity } from 'src/modules/user/infrastructure/persistence/relational/entities/user.entity';
 import {
   BaseEntity,
   Column,

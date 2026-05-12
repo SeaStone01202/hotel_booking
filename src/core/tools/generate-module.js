@@ -17,7 +17,6 @@ const base = path.join('src', 'modules', name);
   `${base}/dto`,
   `${base}/infrastructure/persistence/relational/entities`,
   `${base}/infrastructure/persistence/relational/repositories`,
-  `${base}/infrastructure/persistence/relational/providers`,
   `${base}/infrastructure/persistence/relational/mappers`,
   `${base}/infrastructure/persistence/relational/enums`,
 ].forEach((dir) => fs.mkdirSync(dir, { recursive: true }));
@@ -46,7 +45,7 @@ const files = {
 export class Create${Name}Dto {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  name?: string;
 }
 `,
 
@@ -62,7 +61,7 @@ export class Update${Name}Dto {
 
   // DTO - FILTER
   [`${base}/dto/filter-${name}.dto.ts`]: `import { IsOptional, IsString } from 'class-validator';
- import { PaginationDto } from 'src/common/dto/pagination.dto';
+ import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
 export class Filter${Name}Dto extends PaginationDto {
   @IsOptional()
@@ -75,7 +74,6 @@ export class Filter${Name}Dto extends PaginationDto {
   [`${base}/infrastructure/persistence/relational/entities/${name}.entity.ts`]: `import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
@@ -85,13 +83,13 @@ export class Filter${Name}Dto extends PaginationDto {
 @Entity('${name}')
 export class ${Name}Entity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @UpdateDateColumn({ nullable: true })
+  updatedAt?: Date;
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
@@ -106,8 +104,8 @@ export class ${Name}Entity extends BaseEntity {
 `,
 
   // REPOSITORY INTERFACE
-  [`${base}/infrastructure/persistence/${name}.repository.interface.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
- import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+  [`${base}/infrastructure/persistence/${name}.repository.interface.ts`]: `import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { ${Name}Entity } from './relational/entities/${name}.entity'
 
 export abstract class ${Name}Repository {
   abstract create(data: Partial<${Name}Entity>): Promise<${Name}Entity>;
@@ -124,8 +122,8 @@ export abstract class ${Name}Repository {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { ${Name}Entity } from '../entities/${name}.entity';
-import { ${Name}Repository } from './${name}.repository';
-import { PaginatedResult } from 'src/common/dto/paginated-result.dto';
+import { ${Name}Repository } from '../../${name}.repository.interface';
+import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
 
 @Injectable()
 export class ${Name}RepositoryImpl extends ${Name}Repository {
@@ -196,7 +194,7 @@ export class ${Name}RepositoryImpl extends ${Name}Repository {
 
   // MAPPER
   [`${base}/infrastructure/persistence/relational/mappers/${name}.mapper.ts`]: `import { ${Name}Entity } from '../entities/${name}.entity';
-import { ${Name} } from '../domain/${name}.domain';
+import { ${Name} } from '../entities/${name}.entity';
 
 export class ${Name}Mapper {
   static toDomain(entity: ${Name}Entity): ${Name} {
@@ -219,25 +217,33 @@ export class ${Name}Mapper {
 `,
 
   // PROVIDERS
-  [`${base}/infrastructure/persistence/relational/providers/${name}.providers.ts`]: `import { ${Name}Repository } from '../repositories/${name}.repository';
-import { ${Name}RepositoryImpl } from '../repositories/${name}.repository.impl';
+  [`${base}/infrastructure/persistence/relational/relational-${name}-persistence.module.ts`]: `import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { ${Name}Entity } from './entities/${name}.entity';
+import { ${Name}Repository } from '../${name}.repository.interface';
+import { ${Name}RepositoryImpl } from './repositories/${name}.repository';
 
-export const ${Name}Providers = [
-  {
-    provide: ${Name}Repository,
-    useClass: ${Name}RepositoryImpl,
-  },
-];
+@Module({
+  imports: [TypeOrmModule.forFeature([${Name}Entity])],
+  providers: [
+    {
+      provide: ${Name}Repository,
+      useClass: ${Name}RepositoryImpl,
+    },
+  ],
+  exports: [${Name}Repository],
+})
+export class Relational${Name}PersistenceModule {}
 `,
 
   // SERVICE
   [`${base}/${name}.service.ts`]: `import { Injectable, NotFoundException } from '@nestjs/common';
-import type { ${Name}Repository } from './infrastructure/repositories/${name}.repository';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { Create${Name}Dto } from './dto/create-${name}.dto';
-import { Update${Name}Dto } from './dto/update-${name}.dto';
 import { Filter${Name}Dto } from './dto/filter-${name}.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { ${Name}Entity } from './infrastructure/entities/${name}.entity';
+import { Update${Name}Dto } from './dto/update-${name}.dto';
+import { ${Name}Entity } from './infrastructure/persistence/relational/entities/${name}.entity';
+import { ${Name}Repository } from './infrastructure/persistence/${name}.repository.interface';
 
 @Injectable()
 export class ${Name}Service {
@@ -314,7 +320,7 @@ import { ${Name}Service } from './${name}.service';
 import { Create${Name}Dto } from './dto/create-${name}.dto';
 import { Update${Name}Dto } from './dto/update-${name}.dto';
 import { Filter${Name}Dto } from './dto/filter-${name}.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 
 @Controller('${name}')
 export class ${Name}Controller {
@@ -323,31 +329,31 @@ export class ${Name}Controller {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOkResponse({ description: 'Created successfully' })
-  create(@Body(ValidationPipe) body: Create${Name}Dto) {
+  async create(@Body(ValidationPipe) body: Create${Name}Dto) {
     return this.service.create(body);
   }
 
   @Get()
   @ApiOkResponse({ description: 'Get all with pagination' })
-  findAll(@Query(ValidationPipe) pagination: PaginationDto) {
+  async findAll(@Query(ValidationPipe) pagination: PaginationDto) {
     return this.service.findAll(pagination);
   }
 
   @Get('filter/search')
   @ApiOkResponse({ description: 'Get with filter and search' })
-  findWithFilter(@Query(ValidationPipe) filter: Filter${Name}Dto) {
+  async findWithFilter(@Query(ValidationPipe) filter: Filter${Name}Dto) {
     return this.service.findWithFilter(filter);
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'Get by ID' })
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({ description: 'Updated successfully' })
-  update(
+  async update(
     @Param('id') id: string,
     @Body(ValidationPipe) body: Update${Name}Dto,
   ) {
@@ -357,7 +363,7 @@ export class ${Name}Controller {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOkResponse({ description: 'Deleted successfully' })
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.service.delete(id);
   }
 }
@@ -365,16 +371,14 @@ export class ${Name}Controller {
 
   // MODULE
   [`${base}/${name}.module.ts`]: `import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ${Name}Controller } from './${name}.controller';
 import { ${Name}Service } from './${name}.service';
-import { ${Name}Entity } from './infrastructure/entities/${name}.entity';
-import { ${Name}Providers } from './infrastructure/providers/${name}.providers';
+import { Relational${Name}PersistenceModule } from './infrastructure/persistence/relational/relational-${name}-persistence.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([${Name}Entity])],
+  imports: [Relational${Name}PersistenceModule],
   controllers: [${Name}Controller],
-  providers: [${Name}Service, ...${Name}Providers],
+  providers: [${Name}Service],
   exports: [${Name}Service],
 })
 export class ${Name}Module {}

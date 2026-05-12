@@ -4,6 +4,7 @@ import { Repository, ILike } from 'typeorm';
 import { TenantEntity } from '../entities/tenant.entity';
 import { TenantRepository } from '../../tenant.repository.interface';
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { TenantStatus } from '../enums/tenant-status.enum';
 
 @Injectable()
 export class TenantRepositoryImpl extends TenantRepository {
@@ -68,5 +69,13 @@ export class TenantRepositoryImpl extends TenantRepository {
 
   async delete(id: string) {
     await this.repo.softDelete(id);
+  }
+
+  async findByTenantNameActive(
+    tenantName: string,
+  ): Promise<TenantEntity | null> {
+    return this.repo.findOne({
+      where: { name: tenantName, status: TenantStatus.ACTIVE },
+    });
   }
 }

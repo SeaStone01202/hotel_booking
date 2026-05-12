@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, ILike } from 'typeorm';
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
-import { ILike, Repository } from 'typeorm';
-import { AuthenticationRepository } from '../../authentication.repository.interface';
-import { AuthenticationEntity } from '../entities/authentication.entity';
+import { TenantMemberRepository } from '../../tenant-member.repository.interface';
+import { TenantMemberEntity } from '../entities/tenant-member.entity';
 
 @Injectable()
-export class AuthenticationRepositoryImpl extends AuthenticationRepository {
+export class TenantMemberRepositoryImpl extends TenantMemberRepository {
   constructor(
-    @InjectRepository(AuthenticationEntity)
-    private readonly repo: Repository<AuthenticationEntity>,
+    @InjectRepository(TenantMemberEntity)
+    private readonly repo: Repository<TenantMemberEntity>,
   ) {
     super();
   }
 
-  async create(data: Partial<AuthenticationEntity>) {
+  async create(data: Partial<TenantMemberEntity>) {
     const entity = this.repo.create(data);
     return this.repo.save(entity);
   }
 
-  async findAll(pagination: any): Promise<PaginatedResult<AuthenticationEntity>> {
+  async findAll(pagination: any): Promise<PaginatedResult<TenantMemberEntity>> {
     const limit = pagination.limit || 10;
     const offset = pagination.offset || 0;
     const sort = pagination.sort || 'createdAt';
@@ -38,7 +38,9 @@ export class AuthenticationRepositoryImpl extends AuthenticationRepository {
     return this.repo.findOne({ where: { id } });
   }
 
-  async findWithFilter(filter: any): Promise<PaginatedResult<AuthenticationEntity>> {
+  async findWithFilter(
+    filter: any,
+  ): Promise<PaginatedResult<TenantMemberEntity>> {
     const limit = filter.limit || 10;
     const offset = filter.offset || 0;
     const sort = filter.sort || 'createdAt';
@@ -57,7 +59,7 @@ export class AuthenticationRepositoryImpl extends AuthenticationRepository {
     return { data, total, limit, offset };
   }
 
-  async update(id: string, data: Partial<AuthenticationEntity>) {
+  async update(id: string, data: Partial<TenantMemberEntity>) {
     await this.repo.update(id, data);
     const entity = await this.findById(id);
     if (!entity) {

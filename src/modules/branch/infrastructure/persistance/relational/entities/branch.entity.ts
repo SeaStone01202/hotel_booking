@@ -11,7 +11,7 @@ import {
   BaseEntity,
   type Relation,
 } from 'typeorm';
-import { TenantEntity } from 'src/modules/tenant/infrastructure/persistance/relational/entities/tenant.entity';
+import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant.entity';
 
 @Entity('branch')
 export class BranchEntity extends BaseEntity {

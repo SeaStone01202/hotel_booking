@@ -3,14 +3,12 @@ import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './infrastructure/persistance/relational/entities/user.entity';
-import { UserRepository } from './infrastructure/persistance/user.repository.interface';
+import { UserEntity } from './infrastructure/persistence/relational/entities/user.entity';
+import { UserRepository } from './infrastructure/persistence/user.repository.interface';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly repo: UserRepository,
-  ) {}
+  constructor(private readonly repo: UserRepository) {}
 
   async create(data: CreateUserDto) {
     return this.repo.create(data as Partial<UserEntity>);
