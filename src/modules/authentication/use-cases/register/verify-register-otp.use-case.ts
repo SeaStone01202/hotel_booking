@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
+import { ERROR_CODES } from 'src/core/common/errors/error-code';
 import { TenantMemberEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant-member.entity';
 import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant.entity';
 import { TenantRepository } from 'src/modules/tenant/infrastructure/persistence/tenant.repository.interface';
@@ -34,19 +35,30 @@ export class VerifyRegisterOtpUseCase {
     phone: string;
   }) {
     const storedOtp = await this.redis.get(`otp:${email}`);
-    if (!storedOtp || storedOtp !== otp) {
-      throw new BadRequestException('Invalid or expired OTP');
+    if (!storedOtp) {
+      throw new BadRequestException({
+        errorCode: ERROR_CODES.BAD_REQUEST.EXPIRED_OTP,
+      });
+    }
+    if (storedOtp !== otp) {
+      throw new BadRequestException({
+        errorCode: ERROR_CODES.BAD_REQUEST.INVALID_OTP,
+      });
     }
 
     const existing = await this.userRepository.findByEmail(email);
     if (existing) {
-      throw new BadRequestException('User already exists');
+      throw new BadRequestException({
+        errorCode: ERROR_CODES.BAD_REQUEST.USER_ALREADY_EXISTS,
+      });
     }
 
     const tenantExisting =
       await this.tenantRepository.findByTenantNameActive(tenantSubdomain);
     if (tenantExisting) {
-      throw new BadRequestException('Tenant subdomain already exists');
+      throw new BadRequestException({
+        errorCode: ERROR_CODES.BAD_REQUEST.TENANT_SUBDOMAIN_EXISTS,
+      });
     }
 
     try {
@@ -82,9 +94,9 @@ export class VerifyRegisterOtpUseCase {
         await tenantMemberRepo.save(tenantMember);
       });
     } catch (error) {
-      throw new BadRequestException(
-        `Failed to create user and tenant ${error.message}`,
-      );
+      throw new BadRequestException({
+        errorCode: ERROR_CODES.BAD_REQUEST,
+      });
     }
     return true;
   }

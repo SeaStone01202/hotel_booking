@@ -7,13 +7,13 @@ import { VerifyRegisterOtpRequestDto } from './dto/verify-register-otp.request.d
 export class AuthenticationController {
   constructor(private readonly service: AuthenticationService) {}
 
-  @Post('register')
-  async register(@Body(ValidationPipe) data: CreateAuthenticationDto) {
+  @Post('send-otp')
+  async sendOtp(@Body(ValidationPipe) data: CreateAuthenticationDto) {
     return this.service.sendOTPregister(data);
   }
 
-  @Post('verify')
-  async verify(@Body() request: VerifyRegisterOtpRequestDto) {
+  @Post('verify-otp')
+  async verifyOtp(@Body() request: VerifyRegisterOtpRequestDto) {
     return this.service.verifyOTPregister(request);
   }
 }

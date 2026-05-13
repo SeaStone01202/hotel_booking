@@ -1,9 +1,11 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import Redis from 'ioredis';
+import { ERROR_CODES } from 'src/core/common/errors/error-code';
 import { generateRandomString } from 'src/core/common/utils/random.util';
 import { MailService } from 'src/modules/mail/mail.service';
 import { UserRepository } from 'src/modules/user/infrastructure/persistence/user.repository.interface';
 
+// @Injectable()
 export class SendRegisterOtpUseCase {
   constructor(
     private readonly userRepository: UserRepository,
@@ -14,7 +16,9 @@ export class SendRegisterOtpUseCase {
   async execute(email: string) {
     const existing = await this.userRepository.findByEmail(email);
     if (existing) {
-      throw new NotFoundException('User already exists');
+      throw new NotFoundException({
+        errorCode: ERROR_CODES.BAD_REQUEST.USER_ALREADY_EXISTS,
+      });
     }
     const otp = await generateRandomString({
       length: 6,
