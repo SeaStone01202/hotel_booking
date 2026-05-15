@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import Redis from 'ioredis';
 import { ERROR_CODES } from 'src/core/common/errors/error-code';
 import { TenantMemberEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant-member.entity';
@@ -67,9 +68,10 @@ export class VerifyRegisterOtpUseCase {
         const tenantRepo = manager.getRepository(TenantEntity);
         const tenantMemberRepo = manager.getRepository(TenantMemberEntity);
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = userRepo.create({
           email,
-          passwordHash: password,
+          passwordHash: hashedPassword,
           fullName,
           phone,
         });
