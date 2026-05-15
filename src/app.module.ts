@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './core/config/database.config';
 import { BranchModule } from './modules/branch/branch.module';
@@ -12,15 +12,14 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule,
-        UserModule,
-        AuthenticationModule,
-        TenantModule,
-        BranchModule,
-      ],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: databaseConfig,
     }),
+    UserModule,
+    AuthenticationModule,
+    TenantModule,
+    BranchModule,
   ],
 })
 export class AppModule implements NestModule {

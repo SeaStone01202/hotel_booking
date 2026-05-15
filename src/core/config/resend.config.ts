@@ -1,11 +1,15 @@
+import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
+import { getResendConfig } from './config.constants';
 
 export const ResendProvider = {
   provide: Resend,
-  useFactory: () => {
-    if (!process.env.RESEND_API_KEY) {
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService) => {
+    const { apiKey } = getResendConfig(configService);
+    if (!apiKey) {
       throw new Error('RESEND_API_KEY is not defined in environment variables');
     }
-    return new Resend(process.env.RESEND_API_KEY);
+    return new Resend(apiKey);
   },
 };

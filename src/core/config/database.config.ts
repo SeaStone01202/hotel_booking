@@ -1,15 +1,22 @@
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { getDatabaseConfig } from './config.constants';
 
-export const databaseConfig = (): TypeOrmModuleOptions => ({
-  type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  database: process.env.DB_DATABASE || 'hotel_booking',
-  entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/core/database/migrations/**/*.js'],
-  migrationsTableName: 'migrations',
-  synchronize: false,
-  logging: false,
-});
+export const databaseConfig = (
+  configService: ConfigService,
+): TypeOrmModuleOptions => {
+  const db = getDatabaseConfig(configService);
+  return {
+    type: 'postgres',
+    host: db.host,
+    port: db.port,
+    username: db.username,
+    password: db.password,
+    database: db.database,
+    entities: ['dist/**/*.entity.js'],
+    migrations: ['dist/core/database/migrations/**/*.js'],
+    migrationsTableName: 'migrations',
+    synchronize: false,
+    logging: false,
+  };
+};
