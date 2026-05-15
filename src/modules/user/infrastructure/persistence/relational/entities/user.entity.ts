@@ -12,7 +12,6 @@ import {
   type Relation,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../enums/user-role.enum';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -33,20 +32,15 @@ export class UserEntity extends BaseEntity {
   passwordHash!: string;
 
   @Column({
-    name: 'role',
-    type: 'smallint',
-    default: UserRole.STAFF,
-    nullable: false,
-  })
-  role!: UserRole;
-
-  @Column({
     name: 'is_active',
     type: 'boolean',
     default: true,
     nullable: false,
   })
   isActive!: boolean;
+
+  @Column({ name: 'active_tenant_id', type: 'uuid', nullable: true })
+  activeTenantId?: string;
 
   @Column({ type: 'timestamptz', name: 'last_login_at', nullable: true })
   lastLoginAt?: Date;

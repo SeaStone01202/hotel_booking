@@ -11,6 +11,7 @@ export class TenantMemberMapper {
       userId: entity.userId,
       email: entity.email,
       isPrimary: entity.isPrimary,
+      role: entity.role,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt,
@@ -26,6 +27,7 @@ export class TenantMemberMapper {
     entity.userId = domain.userId;
     entity.email = domain.email;
     entity.isPrimary = domain.isPrimary;
+    entity.role = domain.role;
     entity.createdAt = domain.createdAt || new Date();
     entity.updatedAt = domain.updatedAt;
     entity.deletedAt = domain.deletedAt;

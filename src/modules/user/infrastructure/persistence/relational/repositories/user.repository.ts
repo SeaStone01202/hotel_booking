@@ -4,6 +4,8 @@ import { Repository, ILike } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
 import { UserRepository } from '../../user.repository.interface';
+import { User } from 'src/modules/user/domain/user.domain';
+import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
 export class UserRepositoryImpl extends UserRepository {
@@ -35,7 +37,10 @@ export class UserRepositoryImpl extends UserRepository {
   }
 
   findById(id: string) {
-    return this.repo.findOne({ where: { id } });
+    return this.repo.findOne({
+      where: { id },
+      relations: { tenantMemberships: true },
+    });
   }
 
   async findWithFilter(filter: any): Promise<PaginatedResult<UserEntity>> {
@@ -70,7 +75,11 @@ export class UserRepositoryImpl extends UserRepository {
     await this.repo.softDelete(id);
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
-    return this.repo.findOne({ where: { email } });
+  async findByEmail(email: string): Promise<User | null> {
+    const entity = await this.repo.findOne({
+      where: { email },
+      relations: { tenantMemberships: true },
+    });
+    return entity ? UserMapper.toDomain(entity) : null;
   }
 }

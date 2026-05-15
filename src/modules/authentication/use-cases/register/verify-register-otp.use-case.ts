@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import Redis from 'ioredis';
 import { ERROR_CODES } from 'src/core/common/errors/error-code';
 import { TenantMemberEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant-member.entity';
+import { TenantMemberRole } from 'src/modules/tenant/infrastructure/persistence/relational/enums/tenant-member-role.enum';
 import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/relational/entities/tenant.entity';
 import { TenantRepository } from 'src/modules/tenant/infrastructure/persistence/tenant.repository.interface';
 import { UserEntity } from 'src/modules/user/infrastructure/persistence/relational/entities/user.entity';
@@ -91,6 +92,7 @@ export class VerifyRegisterOtpUseCase {
           userId: user.id,
           email: user.email,
           isPrimary: true,
+          role: TenantMemberRole.OWNER,
         });
 
         await tenantMemberRepo.save(tenantMember);

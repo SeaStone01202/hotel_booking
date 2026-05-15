@@ -4,6 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 
 import { Request, Response } from 'express';
@@ -11,6 +12,8 @@ import { ERROR_CODES } from '../errors/error-code';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(GlobalExceptionFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
 
@@ -30,7 +33,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? (exceptionResponse as any)?.errorCode
         : null;
 
-    let message = ERROR_CODES.INTERNAL_SERVER_ERROR.INTERNAL_SERVER_ERROR; // Default error code
+    let message = ERROR_CODES.INTERNAL_SERVER_ERROR.INTERNAL_SERVER_ERROR;
 
     if (isHttpException) {
       if (typeof exceptionResponse === 'object') {
@@ -38,6 +41,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       } else {
         message = exception.message;
       }
+    }
+
+    // Log error to console
+    const logContext = `${request.method} ${request.url}`;
+    if (status >= 500) {
+      // Server errors: log full stack trace
+      this.logger.error(
+        `[${logContext}] ${status} - ${message}`,
+        exception instanceof Error ? exception.stack : undefined,
+      );
+    } else if (status >= 400) {
+      // Client errors: log warning level with details
+      this.logger.warn(`[${logContext}] ${status} - ${message}`);
+    } else {
+      this.logger.log(`[${logContext}] ${status} - ${message}`);
     }
 
     response.status(status).json({

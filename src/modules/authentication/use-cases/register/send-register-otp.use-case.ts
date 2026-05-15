@@ -5,7 +5,7 @@ import { generateRandomString } from 'src/core/common/utils/random.util';
 import { MailService } from 'src/modules/mail/mail.service';
 import { UserRepository } from 'src/modules/user/infrastructure/persistence/user.repository.interface';
 
-// @Injectable()
+@Injectable()
 export class SendRegisterOtpUseCase {
   constructor(
     private readonly userRepository: UserRepository,

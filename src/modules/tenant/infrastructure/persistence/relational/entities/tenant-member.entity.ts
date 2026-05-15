@@ -14,6 +14,7 @@ import {
   type Relation,
 } from 'typeorm';
 import { TenantEntity } from './tenant.entity';
+import { TenantMemberRole } from '../enums/tenant-member-role.enum';
 
 @Entity('tenant_member')
 @Unique('uq_tenant_member_tenant_email', ['tenantId', 'email'])
@@ -54,6 +55,14 @@ export class TenantMemberEntity extends BaseEntity {
     default: false,
   })
   isPrimary!: boolean;
+
+  @Column({
+    name: 'role',
+    type: 'smallint',
+    default: TenantMemberRole.STAFF,
+    nullable: false,
+  })
+  role!: TenantMemberRole;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

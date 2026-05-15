@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TenantStatus } from '../infrastructure/persistence/relational/enums/tenant-status.enum';
-import { Relation } from 'typeorm';
+import { TenantMemberRole } from '../infrastructure/persistence/relational/enums/tenant-member-role.enum';
 
 export class TenantMember {
   id?: string;
@@ -12,6 +12,8 @@ export class TenantMember {
   email!: string;
 
   isPrimary!: boolean;
+
+  role!: TenantMemberRole;
 
   createdAt!: Date;
 

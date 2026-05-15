@@ -5,6 +5,15 @@ export class UserMapper {
   static toDomain(entity: UserEntity): User {
     return new User({
       id: entity.id,
+      fullName: entity.fullName,
+      email: entity.email,
+      phone: entity.phone,
+      passwordHash: entity.passwordHash,
+      ownedTenants: entity.ownedTenants,
+      tenantMemberships: entity.tenantMemberships,
+      isActive: entity.isActive,
+      activeTenantId: entity.activeTenantId,
+      lastLoginAt: entity.lastLoginAt,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt,
@@ -16,6 +25,40 @@ export class UserMapper {
     if (domain.id) {
       entity.id = domain.id;
     }
+    if (domain.fullName) {
+      entity.fullName = domain.fullName;
+    }
+    if (domain.email) {
+      entity.email = domain.email;
+    }
+    if (domain.phone) {
+      entity.phone = domain.phone;
+    }
+    if (domain.passwordHash) {
+      entity.passwordHash = domain.passwordHash;
+    }
+    if (domain.ownedTenants) {
+      entity.ownedTenants = domain.ownedTenants;
+    }
+    if (domain.tenantMemberships) {
+      entity.tenantMemberships = domain.tenantMemberships;
+    }
+    if (domain.isActive !== undefined) {
+      entity.isActive = domain.isActive;
+    }
+    if (domain.lastLoginAt) {
+      entity.lastLoginAt = domain.lastLoginAt;
+    }
+    if (domain.createdAt) {
+      entity.createdAt = domain.createdAt;
+    }
+    if (domain.updatedAt) {
+      entity.updatedAt = domain.updatedAt;
+    }
+    if (domain.deletedAt) {
+      entity.deletedAt = domain.deletedAt;
+    }
+
     return entity;
   }
 }
