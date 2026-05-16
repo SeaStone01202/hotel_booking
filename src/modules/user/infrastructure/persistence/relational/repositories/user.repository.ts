@@ -16,12 +16,15 @@ export class UserRepositoryImpl extends UserRepository {
     super();
   }
 
-  async create(data: Partial<UserEntity>) {
-    const entity = this.repo.create(data);
-    return this.repo.save(entity);
+  async create(data: Partial<User>): Promise<User> {
+    const entity = this.repo.create(
+      UserMapper.toEntity(data as any) as UserEntity,
+    );
+    const saved = await this.repo.save(entity);
+    return UserMapper.toDomain(saved);
   }
 
-  async findAll(pagination: any): Promise<PaginatedResult<UserEntity>> {
+  async findAll(pagination: any): Promise<PaginatedResult<User>> {
     const limit = pagination.limit || 10;
     const offset = pagination.offset || 0;
     const sort = pagination.sort || 'createdAt';
@@ -33,24 +36,25 @@ export class UserRepositoryImpl extends UserRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return { data: data.map(UserMapper.toDomain), total, limit, offset };
   }
 
-  findById(id: string) {
-    return this.repo.findOne({
+  async findById(id: string): Promise<User | null> {
+    const entity = await this.repo.findOne({
       where: { id },
       relations: { tenantMemberships: true },
     });
+    return entity ? UserMapper.toDomain(entity) : null;
   }
 
-  async findWithFilter(filter: any): Promise<PaginatedResult<UserEntity>> {
+  async findWithFilter(filter: any): Promise<PaginatedResult<User>> {
     const limit = filter.limit || 10;
     const offset = filter.offset || 0;
     const sort = filter.sort || 'createdAt';
     const order = filter.order || 'DESC';
     const search = filter.search;
 
-    const where: any = search ? { guestName: ILike(`%${search}%`) } : {};
+    const where: any = search ? { fullName: ILike(`%${search}%`) } : {};
 
     const [data, total] = await this.repo.findAndCount({
       where,
@@ -59,11 +63,11 @@ export class UserRepositoryImpl extends UserRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return { data: data.map(UserMapper.toDomain), total, limit, offset };
   }
 
-  async update(id: string, data: Partial<UserEntity>) {
-    await this.repo.update(id, data);
+  async update(id: string, data: Partial<User>): Promise<User> {
+    await this.repo.update(id, UserMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
       throw new Error(`Entity ${id} not found`);
@@ -71,7 +75,7 @@ export class UserRepositoryImpl extends UserRepository {
     return entity;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.repo.softDelete(id);
   }
 

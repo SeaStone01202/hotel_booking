@@ -14,7 +14,7 @@ export class AuthenticationController {
   }
 
   @Post('verify-otp')
-  async verifyOtp(@Body() request: VerifyRegisterOtpRequestDto) {
+  async verifyOtp(@Body(ValidationPipe) request: VerifyRegisterOtpRequestDto) {
     return this.service.verifyOTPregister(request);
   }
 

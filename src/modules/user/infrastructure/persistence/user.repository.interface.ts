@@ -1,13 +1,12 @@
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
-import { UserEntity } from './relational/entities/user.entity';
 import { User } from '../../domain/user.domain';
 
 export abstract class UserRepository {
-  abstract create(data: Partial<UserEntity>): Promise<UserEntity>;
-  abstract findAll(pagination: any): Promise<PaginatedResult<UserEntity>>;
-  abstract findById(id: string): Promise<UserEntity | null>;
-  abstract findWithFilter(filter: any): Promise<PaginatedResult<UserEntity>>;
-  abstract update(id: string, data: Partial<UserEntity>): Promise<UserEntity>;
+  abstract create(data: Partial<User>): Promise<User>;
+  abstract findAll(pagination: any): Promise<PaginatedResult<User>>;
+  abstract findById(id: string): Promise<User | null>;
+  abstract findWithFilter(filter: any): Promise<PaginatedResult<User>>;
+  abstract update(id: string, data: Partial<User>): Promise<User>;
   abstract delete(id: string): Promise<void>;
 
   abstract findByEmail(email: string): Promise<User | null>;

@@ -1,23 +1,18 @@
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
-import { TenantEntity } from './relational/entities/tenant.entity';
+import { Tenant } from 'src/modules/tenant/domain/tenant.domain';
 
 export abstract class TenantRepository {
-  abstract create(data: Partial<TenantEntity>): Promise<TenantEntity>;
+  abstract create(data: Partial<Tenant>): Promise<Tenant>;
 
-  abstract findAll(pagination: any): Promise<PaginatedResult<TenantEntity>>;
+  abstract findAll(pagination: any): Promise<PaginatedResult<Tenant>>;
 
-  abstract findById(id: string): Promise<TenantEntity | null>;
+  abstract findById(id: string): Promise<Tenant | null>;
 
-  abstract findWithFilter(filter: any): Promise<PaginatedResult<TenantEntity>>;
+  abstract findWithFilter(filter: any): Promise<PaginatedResult<Tenant>>;
 
-  abstract update(
-    id: string,
-    data: Partial<TenantEntity>,
-  ): Promise<TenantEntity>;
+  abstract update(id: string, data: Partial<Tenant>): Promise<Tenant>;
 
   abstract delete(id: string): Promise<void>;
 
-  abstract findByTenantNameActive(
-    tenantName: string,
-  ): Promise<TenantEntity | null>;
+  abstract findByTenantNameActive(tenantName: string): Promise<Tenant | null>;
 }

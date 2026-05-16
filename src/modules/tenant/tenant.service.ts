@@ -3,7 +3,6 @@ import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { FilterTenantDto } from './dto/filter-tenant.dto';
 import { PaginationDto } from 'src/core/common/dto/pagination.dto';
-import { TenantEntity } from './infrastructure/persistence/relational/entities/tenant.entity';
 import { TenantRepository } from './infrastructure/persistence/tenant.repository.interface';
 
 @Injectable()
@@ -11,24 +10,11 @@ export class TenantService {
   constructor(private readonly repo: TenantRepository) {}
 
   async create(data: CreateTenantDto) {
-    return this.repo.create(data as Partial<TenantEntity>);
+    return this.repo.create(data as any);
   }
 
   async findAll(pagination: PaginationDto) {
     const result = await this.repo.findAll(pagination);
-    return {
-      data: result.data,
-      paginate: {
-        total: result.total,
-        limit: result.limit,
-        offset: result.offset,
-        pages: Math.ceil(result.total / result.limit),
-      },
-    };
-  }
-
-  async findWithFilter(filter: FilterTenantDto) {
-    const result = await this.repo.findWithFilter(filter);
     return {
       data: result.data,
       paginate: {
@@ -50,7 +36,7 @@ export class TenantService {
 
   async update(id: string, data: UpdateTenantDto) {
     await this.findOne(id);
-    return this.repo.update(id, data as Partial<TenantEntity>);
+    return this.repo.update(id, data as any);
   }
 
   async delete(id: string) {

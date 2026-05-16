@@ -38,16 +38,16 @@ export class LoginUseCase {
       user.activeTenantId = targetMembership.tenantId;
     }
 
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const tenant = await this.tenantRepository.findById(
       targetMembership.tenantId,
     );
     if (!tenant) {
       throw new UnauthorizedException('Tenant is deleted');
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
     }
 
     // Update last login timestamp

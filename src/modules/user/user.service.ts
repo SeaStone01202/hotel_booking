@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaginationDto } from 'src/core/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FilterUserDto } from './dto/filter-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './infrastructure/persistence/relational/entities/user.entity';
 import { UserRepository } from './infrastructure/persistence/user.repository.interface';
 
 @Injectable()
@@ -11,24 +9,11 @@ export class UserService {
   constructor(private readonly repo: UserRepository) {}
 
   async create(data: CreateUserDto) {
-    return this.repo.create(data as Partial<UserEntity>);
+    return this.repo.create(data as any);
   }
 
   async findAll(pagination: PaginationDto) {
     const result = await this.repo.findAll(pagination);
-    return {
-      data: result.data,
-      paginate: {
-        total: result.total,
-        limit: result.limit,
-        offset: result.offset,
-        pages: Math.ceil(result.total / result.limit),
-      },
-    };
-  }
-
-  async findWithFilter(filter: FilterUserDto) {
-    const result = await this.repo.findWithFilter(filter);
     return {
       data: result.data,
       paginate: {
@@ -50,7 +35,7 @@ export class UserService {
 
   async update(id: string, data: UpdateUserDto) {
     await this.findOne(id);
-    return this.repo.update(id, data as Partial<UserEntity>);
+    return this.repo.update(id, data as any);
   }
 
   async delete(id: string) {

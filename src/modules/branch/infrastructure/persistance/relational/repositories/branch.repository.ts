@@ -4,6 +4,8 @@ import { Repository, ILike } from 'typeorm';
 import { BranchEntity } from '../entities/branch.entity';
 import { BranchRepository } from '../../branch.repository.interface';
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
+import { Branch } from 'src/modules/branch/domain/branch.domain';
+import { BranchMapper } from '../mappers/branch.mapper';
 
 @Injectable()
 export class BranchRepositoryImpl extends BranchRepository {
@@ -14,12 +16,15 @@ export class BranchRepositoryImpl extends BranchRepository {
     super();
   }
 
-  async create(data: Partial<BranchEntity>) {
-    const entity = this.repo.create(data);
-    return this.repo.save(entity);
+  async create(data: Partial<Branch>): Promise<Branch> {
+    const entity = this.repo.create(
+      BranchMapper.toEntity(data as any) as BranchEntity,
+    );
+    const saved = await this.repo.save(entity);
+    return BranchMapper.toDomain(saved);
   }
 
-  async findAll(pagination: any): Promise<PaginatedResult<BranchEntity>> {
+  async findAll(pagination: any): Promise<PaginatedResult<Branch>> {
     const limit = pagination.limit || 10;
     const offset = pagination.offset || 0;
     const sort = pagination.sort || 'createdAt';
@@ -31,21 +36,22 @@ export class BranchRepositoryImpl extends BranchRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return { data: data.map(BranchMapper.toDomain), total, limit, offset };
   }
 
-  findById(id: string) {
-    return this.repo.findOne({ where: { id } });
+  async findById(id: string): Promise<Branch | null> {
+    const entity = await this.repo.findOne({ where: { id } });
+    return entity ? BranchMapper.toDomain(entity) : null;
   }
 
-  async findWithFilter(filter: any): Promise<PaginatedResult<BranchEntity>> {
+  async findWithFilter(filter: any): Promise<PaginatedResult<Branch>> {
     const limit = filter.limit || 10;
     const offset = filter.offset || 0;
     const sort = filter.sort || 'createdAt';
     const order = filter.order || 'DESC';
     const search = filter.search;
 
-    const where: any = search ? { guestName: ILike(`%${search}%`) } : {};
+    const where: any = search ? { name: ILike(`%${search}%`) } : {};
 
     const [data, total] = await this.repo.findAndCount({
       where,
@@ -54,11 +60,11 @@ export class BranchRepositoryImpl extends BranchRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return { data: data.map(BranchMapper.toDomain), total, limit, offset };
   }
 
-  async update(id: string, data: Partial<BranchEntity>) {
-    await this.repo.update(id, data);
+  async update(id: string, data: Partial<Branch>): Promise<Branch> {
+    await this.repo.update(id, BranchMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
       throw new Error(`Entity ${id} not found`);
@@ -66,7 +72,7 @@ export class BranchRepositoryImpl extends BranchRepository {
     return entity;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.repo.softDelete(id);
   }
 }

@@ -4,6 +4,8 @@ import { Repository, ILike } from 'typeorm';
 import { PaginatedResult } from 'src/core/common/dto/paginated-result.dto';
 import { TenantMemberRepository } from '../../tenant-member.repository.interface';
 import { TenantMemberEntity } from '../entities/tenant-member.entity';
+import { TenantMember } from 'src/modules/tenant/domain/tenant-member.domain';
+import { TenantMemberMapper } from '../mappers/tenant-member.mapper';
 
 @Injectable()
 export class TenantMemberRepositoryImpl extends TenantMemberRepository {
@@ -14,12 +16,15 @@ export class TenantMemberRepositoryImpl extends TenantMemberRepository {
     super();
   }
 
-  async create(data: Partial<TenantMemberEntity>) {
-    const entity = this.repo.create(data);
-    return this.repo.save(entity);
+  async create(data: Partial<TenantMember>): Promise<TenantMember> {
+    const entity = this.repo.create(
+      TenantMemberMapper.toEntity(data as any) as TenantMemberEntity,
+    );
+    const saved = await this.repo.save(entity);
+    return TenantMemberMapper.toDomain(saved);
   }
 
-  async findAll(pagination: any): Promise<PaginatedResult<TenantMemberEntity>> {
+  async findAll(pagination: any): Promise<PaginatedResult<TenantMember>> {
     const limit = pagination.limit || 10;
     const offset = pagination.offset || 0;
     const sort = pagination.sort || 'createdAt';
@@ -31,23 +36,27 @@ export class TenantMemberRepositoryImpl extends TenantMemberRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return {
+      data: data.map(TenantMemberMapper.toDomain),
+      total,
+      limit,
+      offset,
+    };
   }
 
-  findById(id: string) {
-    return this.repo.findOne({ where: { id } });
+  async findById(id: string): Promise<TenantMember | null> {
+    const entity = await this.repo.findOne({ where: { id } });
+    return entity ? TenantMemberMapper.toDomain(entity) : null;
   }
 
-  async findWithFilter(
-    filter: any,
-  ): Promise<PaginatedResult<TenantMemberEntity>> {
+  async findWithFilter(filter: any): Promise<PaginatedResult<TenantMember>> {
     const limit = filter.limit || 10;
     const offset = filter.offset || 0;
     const sort = filter.sort || 'createdAt';
     const order = filter.order || 'DESC';
     const search = filter.search;
 
-    const where: any = search ? { guestName: ILike(`%${search}%`) } : {};
+    const where: any = search ? { email: ILike(`%${search}%`) } : {};
 
     const [data, total] = await this.repo.findAndCount({
       where,
@@ -56,11 +65,16 @@ export class TenantMemberRepositoryImpl extends TenantMemberRepository {
       order: { [sort]: order },
     });
 
-    return { data, total, limit, offset };
+    return {
+      data: data.map(TenantMemberMapper.toDomain),
+      total,
+      limit,
+      offset,
+    };
   }
 
-  async update(id: string, data: Partial<TenantMemberEntity>) {
-    await this.repo.update(id, data);
+  async update(id: string, data: Partial<TenantMember>): Promise<TenantMember> {
+    await this.repo.update(id, TenantMemberMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
       throw new Error(`Entity ${id} not found`);
@@ -68,7 +82,7 @@ export class TenantMemberRepositoryImpl extends TenantMemberRepository {
     return entity;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.repo.softDelete(id);
   }
 }
