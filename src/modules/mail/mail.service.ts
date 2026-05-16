@@ -1,11 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
+import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly resend: Resend) {}
-
   async sendOtp(email: string, otp: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',

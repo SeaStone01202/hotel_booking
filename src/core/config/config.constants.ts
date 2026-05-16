@@ -13,10 +13,5 @@ export const getRedisConfig = (configService: ConfigService) => ({
   port: configService.get<number>('REDIS_PORT', 6379),
 });
 
-export const getResendConfig = (configService: ConfigService) => ({
-  apiKey: configService.get<string>('RESEND_API_KEY', ''),
-});
-
 export type DatabaseConfig = ReturnType<typeof getDatabaseConfig>;
 export type RedisConfig = ReturnType<typeof getRedisConfig>;
-export type ResendConfig = ReturnType<typeof getResendConfig>;

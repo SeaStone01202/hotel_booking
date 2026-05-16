@@ -24,6 +24,6 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantMiddleware).forRoutes('api');
+    consumer.apply(TenantMiddleware).forRoutes('api/v1');
   }
 }

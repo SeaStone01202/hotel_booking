@@ -1,14 +1,32 @@
 import { DataSource } from 'typeorm';
 
-// Standalone DataSource for TypeORM CLI (migration:generate, migration:run)
-// Uses process.env directly because ConfigService is not available in CLI context
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+function requireInt(name: string): number {
+  const raw = process.env[name];
+  if (!raw) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  const parsed = parseInt(raw, 10);
+  if (isNaN(parsed)) {
+    throw new Error(`Invalid integer for environment variable ${name}: ${raw}`);
+  }
+  return parsed;
+}
+
 const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  database: process.env.DB_DATABASE || 'hotel_booking',
+  host: requireEnv('DB_HOST'),
+  port: requireInt('DB_PORT'),
+  username: requireEnv('DB_USERNAME'),
+  password: requireEnv('DB_PASSWORD'),
+  database: requireEnv('DB_DATABASE'),
   synchronize: false,
   logging: process.env.TYPEORM_LOGGING === 'true',
   entities: ['src/**/*.entity.ts'],
