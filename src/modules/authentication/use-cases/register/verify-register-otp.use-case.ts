@@ -98,6 +98,8 @@ export class VerifyRegisterOtpUseCase {
         await tenantMemberRepo.save(tenantMember);
       });
     } catch (error) {
+      // Log the error for debugging (in production, use a logger)
+      console.error('Transaction failed in VerifyRegisterOtpUseCase:', error);
       throw new BadRequestException({
         errorCode: ERROR_CODES.BAD_REQUEST,
       });

@@ -19,6 +19,12 @@ export class LoginUseCase {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    // Check password FIRST to avoid unnecessary tenant queries
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const memberships = (user.tenantMemberships as any[]) || [];
     if (memberships.length === 0) {
       throw new UnauthorizedException('No tenant membership found');
@@ -38,11 +44,7 @@ export class LoginUseCase {
       user.activeTenantId = targetMembership.tenantId;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
+    // Verify tenant still exists
     const tenant = await this.tenantRepository.findById(
       targetMembership.tenantId,
     );
@@ -68,7 +70,7 @@ export class LoginUseCase {
       {
         userId: user.id,
         email: user.email,
-        role: targetMembership.role ?? null,
+        role: targetMembership.role,
         tenantId: targetMembership.tenantId,
         type: 'access',
       },
@@ -97,7 +99,7 @@ export class LoginUseCase {
           tenantId,
           name: t?.name ?? null,
           subdomain: t?.subdomain ?? null,
-          role: TenantMemberRole[m?.role] ?? null,
+          role: m?.role ?? null,
           isPrimary: m?.isPrimary ?? false,
         };
       }),

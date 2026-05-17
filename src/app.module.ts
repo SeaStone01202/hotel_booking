@@ -7,6 +7,10 @@ import { TenantModule } from './modules/tenant/tenant.module';
 import { UserModule } from './modules/user/user.module';
 import { TenantMiddleware } from './core/common/context/tenant.middleware';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './core/guards/auth.guard';
+import { TenantGuard } from './core/guards/tenant.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,6 +24,23 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
     AuthenticationModule,
     TenantModule,
     BranchModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: {
+        expiresIn: '1h',
+      },
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: TenantGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
