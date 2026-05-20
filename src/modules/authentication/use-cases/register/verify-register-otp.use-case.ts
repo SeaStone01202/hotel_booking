@@ -8,6 +8,8 @@ import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/rela
 import { TenantRepository } from 'src/modules/tenant/infrastructure/persistence/tenant.repository.interface';
 import { UserEntity } from 'src/modules/user/infrastructure/persistence/relational/entities/user.entity';
 import { UserRepository } from 'src/modules/user/infrastructure/persistence/user.repository.interface';
+import { BranchEntity } from 'src/modules/branch/infrastructure/persistance/relational/entities/branch.entity';
+import { BranchRepository } from 'src/modules/branch/infrastructure/persistance/branch.repository.interface';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -15,6 +17,7 @@ export class VerifyRegisterOtpUseCase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly tenantRepository: TenantRepository,
+    private readonly branchRepository: BranchRepository,
     private readonly redis: Redis,
     private readonly dataSource: DataSource,
   ) {}
@@ -68,6 +71,7 @@ export class VerifyRegisterOtpUseCase {
         const userRepo = manager.getRepository(UserEntity);
         const tenantRepo = manager.getRepository(TenantEntity);
         const tenantMemberRepo = manager.getRepository(TenantMemberEntity);
+        const branchRepo = manager.getRepository(BranchEntity);
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = userRepo.create({
@@ -96,6 +100,17 @@ export class VerifyRegisterOtpUseCase {
         });
 
         await tenantMemberRepo.save(tenantMember);
+
+        // Create default branch "Main"
+        const mainBranch = branchRepo.create({
+          tenantId: tenant.id,
+          name: 'Main',
+          address: '',
+          phone: undefined,
+          email: undefined,
+        });
+
+        await branchRepo.save(mainBranch);
       });
     } catch (error) {
       // Log the error for debugging (in production, use a logger)

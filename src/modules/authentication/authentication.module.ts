@@ -5,6 +5,7 @@ import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 import { TenantModule } from '../tenant/tenant.module';
+import { BranchModule } from '../branch/branch.module';
 import { RedisProvider } from 'src/core/config/redis.config';
 import { VerifyRegisterOtpUseCase } from './use-cases/register/verify-register-otp.use-case';
 import { SendRegisterOtpUseCase } from './use-cases/register/send-register-otp.use-case';
@@ -16,6 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     MailModule,
     TenantModule,
+    BranchModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
