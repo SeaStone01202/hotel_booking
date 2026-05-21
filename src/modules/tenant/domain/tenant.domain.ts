@@ -2,7 +2,13 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TenantStatus } from '../infrastructure/persistence/relational/enums/tenant-status.enum';
 
 export class Tenant {
-  id?: string;
+  id!: number;
+
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    format: 'uuid',
+  })
+  uid!: string;
 
   @ApiProperty({ example: 'Acme Corporation' })
   name!: string;
@@ -10,8 +16,8 @@ export class Tenant {
   @ApiProperty({ example: 'acme' })
   subdomain!: string;
 
-  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000' })
-  ownerId!: string;
+  @ApiProperty({ example: 1 })
+  ownerId!: number;
 
   @ApiProperty({ enum: TenantStatus, example: TenantStatus.ACTIVE })
   status!: TenantStatus;

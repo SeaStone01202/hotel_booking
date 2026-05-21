@@ -19,8 +19,8 @@ import { TenantMemberEntity } from './tenant-member.entity';
 
 @Entity('tenant')
 export class TenantEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryGeneratedColumn('increment')
+  id!: number;
 
   @Column({ name: 'name', type: 'varchar', unique: true, nullable: false })
   name!: string;
@@ -30,8 +30,11 @@ export class TenantEntity extends BaseEntity {
   subdomain!: string;
 
   @Index('idx_tenant_owner_id')
-  @Column({ name: 'owner_id', type: 'uuid', nullable: false })
-  ownerId!: string;
+  @Column({ name: 'uid', type: 'uuid', nullable: false })
+  uid!: string;
+
+  @Column({ name: 'owner_id', type: 'int', nullable: false })
+  ownerId!: number;
 
   @ManyToOne(() => UserEntity, (user) => user.ownedTenants, {
     nullable: false,

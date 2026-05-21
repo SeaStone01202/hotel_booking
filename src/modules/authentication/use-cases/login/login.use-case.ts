@@ -92,7 +92,7 @@ export class LoginUseCase {
     // Build available tenants list
     const tenantIds = memberships.map((m) => m.tenantId);
     const tenants = await Promise.all(
-      tenantIds.map(async (tenantId: string) => {
+      tenantIds.map(async (tenantId: number) => {
         const t = await this.tenantRepository.findById(tenantId);
         const m = memberships.find((mem) => mem.tenantId === tenantId);
         return {

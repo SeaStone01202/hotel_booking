@@ -5,6 +5,7 @@ export class BranchMapper {
   static toDomain(entity: BranchEntity): Branch {
     return new Branch({
       id: entity.id,
+      uid: entity.uid,
       tenantId: entity.tenantId,
       name: entity.name,
       phone: entity.phone,
@@ -21,6 +22,9 @@ export class BranchMapper {
     const entity: Partial<BranchEntity> = {};
     if (domain.id) {
       entity.id = domain.id;
+    }
+    if (domain.uid) {
+      entity.uid = domain.uid;
     }
     entity.tenantId = domain.tenantId;
     entity.name = domain.name;

@@ -39,7 +39,7 @@ export class BranchRepositoryImpl extends BranchRepository {
     return { data: data.map(BranchMapper.toDomain), total, limit, offset };
   }
 
-  async findById(id: string): Promise<Branch | null> {
+  async findById(id: number): Promise<Branch | null> {
     const entity = await this.repo.findOne({ where: { id } });
     return entity ? BranchMapper.toDomain(entity) : null;
   }
@@ -63,7 +63,7 @@ export class BranchRepositoryImpl extends BranchRepository {
     return { data: data.map(BranchMapper.toDomain), total, limit, offset };
   }
 
-  async update(id: string, data: Partial<Branch>): Promise<Branch> {
+  async update(id: number, data: Partial<Branch>): Promise<Branch> {
     await this.repo.update(id, BranchMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
@@ -72,7 +72,7 @@ export class BranchRepositoryImpl extends BranchRepository {
     return entity;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.repo.softDelete(id);
   }
 }

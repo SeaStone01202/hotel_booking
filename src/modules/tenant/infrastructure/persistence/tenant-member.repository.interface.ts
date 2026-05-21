@@ -6,14 +6,14 @@ export abstract class TenantMemberRepository {
 
   abstract findAll(pagination: any): Promise<PaginatedResult<TenantMember>>;
 
-  abstract findById(id: string): Promise<TenantMember | null>;
+  abstract findById(id: number): Promise<TenantMember | null>;
 
   abstract findWithFilter(filter: any): Promise<PaginatedResult<TenantMember>>;
 
   abstract update(
-    id: string,
+    id: number,
     data: Partial<TenantMember>,
   ): Promise<TenantMember>;
 
-  abstract delete(id: string): Promise<void>;
+  abstract delete(id: number): Promise<void>;
 }

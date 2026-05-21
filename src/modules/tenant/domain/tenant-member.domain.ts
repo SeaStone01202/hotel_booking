@@ -3,11 +3,13 @@ import { TenantStatus } from '../infrastructure/persistence/relational/enums/ten
 import { TenantMemberRole } from '../infrastructure/persistence/relational/enums/tenant-member-role.enum';
 
 export class TenantMember {
-  id?: string;
+  id!: number;
 
-  tenantId!: string;
+  uid!: string;
 
-  userId!: string;
+  tenantId!: number;
+
+  userId!: number;
 
   email!: string;
 

@@ -15,12 +15,15 @@ import { TenantEntity } from 'src/modules/tenant/infrastructure/persistence/rela
 
 @Entity('branch')
 export class BranchEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryGeneratedColumn('increment')
+  id!: number;
+
+  @Column({ name: 'uid', type: 'uuid', nullable: false })
+  uid!: string;
 
   @Index('idx_branch_tenant_id')
-  @Column({ name: 'tenant_id', type: 'uuid', nullable: false })
-  tenantId!: string;
+  @Column({ name: 'tenant_id', type: 'int', nullable: false })
+  tenantId!: number;
 
   @ManyToOne(() => TenantEntity, (tenant) => tenant.branches, {
     nullable: false,

@@ -5,6 +5,7 @@ export class TenantMapper {
   static toDomain(entity: TenantEntity): Tenant {
     return new Tenant({
       id: entity.id,
+      uid: entity.uid,
       name: entity.name,
       subdomain: entity.subdomain,
       ownerId: entity.ownerId,
@@ -19,6 +20,9 @@ export class TenantMapper {
     const entity: Partial<TenantEntity> = {};
     if (domain.id) {
       entity.id = domain.id;
+    }
+    if (domain.uid) {
+      entity.uid = domain.uid;
     }
     entity.name = domain.name;
     entity.subdomain = domain.subdomain;

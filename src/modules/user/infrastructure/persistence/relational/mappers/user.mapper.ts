@@ -5,6 +5,7 @@ export class UserMapper {
   static toDomain(entity: UserEntity): User {
     return new User({
       id: entity.id,
+      uid: entity.uid,
       fullName: entity.fullName,
       email: entity.email,
       phone: entity.phone,
@@ -24,6 +25,9 @@ export class UserMapper {
     const entity: Partial<UserEntity> = {};
     if (domain.id) {
       entity.id = domain.id;
+    }
+    if (domain.uid) {
+      entity.uid = domain.uid;
     }
     if (domain.fullName) {
       entity.fullName = domain.fullName;

@@ -9,6 +9,6 @@ import { BranchProviders } from './infrastructure/persistance/relational/provide
   imports: [TypeOrmModule.forFeature([BranchEntity])],
   controllers: [BranchController],
   providers: [BranchService, ...BranchProviders],
-  exports: [BranchService],
+  exports: [BranchService, ...BranchProviders],
 })
 export class BranchModule {}

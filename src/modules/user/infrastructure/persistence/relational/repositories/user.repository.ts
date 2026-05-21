@@ -39,7 +39,7 @@ export class UserRepositoryImpl extends UserRepository {
     return { data: data.map(UserMapper.toDomain), total, limit, offset };
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     const entity = await this.repo.findOne({
       where: { id },
       relations: { tenantMemberships: true },
@@ -66,7 +66,7 @@ export class UserRepositoryImpl extends UserRepository {
     return { data: data.map(UserMapper.toDomain), total, limit, offset };
   }
 
-  async update(id: string, data: Partial<User>): Promise<User> {
+  async update(id: number, data: Partial<User>): Promise<User> {
     await this.repo.update(id, UserMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
@@ -75,7 +75,7 @@ export class UserRepositoryImpl extends UserRepository {
     return entity;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.repo.softDelete(id);
   }
 

@@ -6,13 +6,13 @@ export abstract class TenantRepository {
 
   abstract findAll(pagination: any): Promise<PaginatedResult<Tenant>>;
 
-  abstract findById(id: string): Promise<Tenant | null>;
+  abstract findById(id: number): Promise<Tenant | null>;
 
   abstract findWithFilter(filter: any): Promise<PaginatedResult<Tenant>>;
 
-  abstract update(id: string, data: Partial<Tenant>): Promise<Tenant>;
+  abstract update(id: number, data: Partial<Tenant>): Promise<Tenant>;
 
-  abstract delete(id: string): Promise<void>;
+  abstract delete(id: number): Promise<void>;
 
   abstract findByTenantNameActive(tenantName: string): Promise<Tenant | null>;
 }

@@ -1,5 +1,3 @@
-import { Tenant } from 'src/modules/tenant/domain/tenant.domain';
-import { TenantEntity } from '../entities/tenant.entity';
 import { TenantMemberEntity } from '../entities/tenant-member.entity';
 import { TenantMember } from 'src/modules/tenant/domain/tenant-member.domain';
 
@@ -7,6 +5,7 @@ export class TenantMemberMapper {
   static toDomain(entity: TenantMemberEntity): TenantMember {
     return new TenantMember({
       id: entity.id,
+      uid: entity.uid,
       tenantId: entity.tenantId,
       userId: entity.userId,
       email: entity.email,
@@ -22,6 +21,9 @@ export class TenantMemberMapper {
     const entity: Partial<TenantMemberEntity> = {};
     if (domain.id) {
       entity.id = domain.id;
+    }
+    if (domain.uid) {
+      entity.uid = domain.uid;
     }
     entity.tenantId = domain.tenantId;
     entity.userId = domain.userId;

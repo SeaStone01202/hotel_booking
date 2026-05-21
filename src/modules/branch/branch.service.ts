@@ -26,7 +26,7 @@ export class BranchService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const entity = await this.repo.findById(id);
     if (!entity) {
       throw new NotFoundException(`Branch ${id} not found`);
@@ -34,12 +34,12 @@ export class BranchService {
     return entity;
   }
 
-  async update(id: string, data: UpdateBranchDto) {
+  async update(id: number, data: UpdateBranchDto) {
     await this.findOne(id);
     return this.repo.update(id, data as any);
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     await this.findOne(id);
     return this.repo.delete(id);
   }

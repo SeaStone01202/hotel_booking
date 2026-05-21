@@ -40,7 +40,7 @@ export class TenantRepositoryImpl extends TenantRepository {
     return { data: data.map(TenantMapper.toDomain), total, limit, offset };
   }
 
-  async findById(id: string): Promise<Tenant | null> {
+  async findById(id: number): Promise<Tenant | null> {
     const entity = await this.repo.findOne({ where: { id } });
     return entity ? TenantMapper.toDomain(entity) : null;
   }
@@ -64,7 +64,7 @@ export class TenantRepositoryImpl extends TenantRepository {
     return { data: data.map(TenantMapper.toDomain), total, limit, offset };
   }
 
-  async update(id: string, data: Partial<Tenant>): Promise<Tenant> {
+  async update(id: number, data: Partial<Tenant>): Promise<Tenant> {
     await this.repo.update(id, TenantMapper.toEntity(data as any));
     const entity = await this.findById(id);
     if (!entity) {
@@ -73,7 +73,7 @@ export class TenantRepositoryImpl extends TenantRepository {
     return entity;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.repo.softDelete(id);
   }
 

@@ -15,8 +15,8 @@ import {
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryGeneratedColumn('increment')
+  id!: number;
 
   @Column({ name: 'full_name', type: 'varchar', length: 150, nullable: false })
   fullName!: string;
@@ -39,8 +39,11 @@ export class UserEntity extends BaseEntity {
   })
   isActive!: boolean;
 
-  @Column({ name: 'active_tenant_id', type: 'uuid', nullable: true })
-  activeTenantId?: string;
+  @Column({ name: 'uid', type: 'uuid', nullable: false })
+  uid!: string;
+
+  @Column({ name: 'active_tenant_id', type: 'int', nullable: true })
+  activeTenantId?: number;
 
   @Column({ type: 'timestamptz', name: 'last_login_at', nullable: true })
   lastLoginAt?: Date;

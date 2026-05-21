@@ -1,7 +1,9 @@
 export class Branch {
-  id?: string;
+  id!: number;
 
-  tenantId!: string;
+  uid!: string;
+
+  tenantId!: number;
 
   name!: string;
 

@@ -19,12 +19,15 @@ import { TenantMemberRole } from '../enums/tenant-member-role.enum';
 @Entity('tenant_member')
 @Unique('uq_tenant_member_tenant_email', ['tenantId', 'email'])
 export class TenantMemberEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryGeneratedColumn('increment')
+  id!: number;
+
+  @Column({ name: 'uid', type: 'uuid', nullable: false })
+  uid!: string;
 
   @Index('idx_tenant_member_tenant_id')
-  @Column({ name: 'tenant_id', type: 'uuid', nullable: false })
-  tenantId!: string;
+  @Column({ name: 'tenant_id', type: 'int', nullable: false })
+  tenantId!: number;
 
   @ManyToOne(() => TenantEntity, (tenant) => tenant.members, {
     nullable: false,
@@ -34,8 +37,8 @@ export class TenantMemberEntity extends BaseEntity {
   tenant!: Relation<TenantEntity>;
 
   @Index('idx_tenant_member_user_id')
-  @Column({ name: 'user_id', type: 'uuid', nullable: false })
-  userId!: string;
+  @Column({ name: 'user_id', type: 'int', nullable: false })
+  userId!: number;
 
   @ManyToOne(() => UserEntity, (user) => user.tenantMemberships, {
     nullable: false,

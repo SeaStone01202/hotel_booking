@@ -25,7 +25,7 @@ export class UserService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const entity = await this.repo.findById(id);
     if (!entity) {
       throw new NotFoundException(`User ${id} not found`);
@@ -33,12 +33,12 @@ export class UserService {
     return entity;
   }
 
-  async update(id: string, data: UpdateUserDto) {
+  async update(id: number, data: UpdateUserDto) {
     await this.findOne(id);
     return this.repo.update(id, data as any);
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     await this.findOne(id);
     return this.repo.delete(id);
   }

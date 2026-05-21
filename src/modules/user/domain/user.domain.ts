@@ -1,5 +1,7 @@
 export class User {
-  id!: string;
+  id!: number;
+
+  uid!: string;
 
   fullName!: string;
 
@@ -11,7 +13,7 @@ export class User {
 
   isActive!: boolean;
 
-  activeTenantId?: string;
+  activeTenantId?: number;
 
   ownedTenants?: any[];
 
